@@ -13,3 +13,15 @@ default['macos']['disk_sleep_disabled'] = false
 
 default['macos']['network_time_server'] = 'time.windows.com'
 default['macos']['time_zone'] = 'America/Los_Angeles'
+
+default['macos']['image_capture']['hot_plug'] = true
+default['macos']['software_updates']['download'] = false
+default['macos']['software_updates']['check_for_updates'] = false
+
+default['macos']['bluetooth']['keyboard_missing'] = false
+default['macos']['bluetooth']['mouse_missing'] = false
+
+default['macos']['new_to_mac'] = false
+default['macos']['remote_management'] = true
+default['macos']['time_machine']['offer_new_disks'] = false
+default['macos']['screensaver']['idle_time'] = false
