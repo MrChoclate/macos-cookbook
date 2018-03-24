@@ -1,3 +1,5 @@
+include_recipe 'macos::disable_screensaver'
+
 system_preference 'disable computer sleep' do
   preference :computersleep
   setting 'Never'
@@ -62,11 +64,4 @@ system_preference 'enable remote login' do
   else
     setting 'Off'
   end
-end
-
-defaults 'com.apple.screensaver' do
-  option '-currentHost write'
-  settings 'idleTime' => 0
-  not_if { screensaver_disabled? }
-  user node['macos']['admin_user']
 end
