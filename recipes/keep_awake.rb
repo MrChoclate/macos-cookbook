@@ -68,11 +68,8 @@ end
 
 execute 'restore default power settings' do
   command ['/usr/bin/pmset', 'touch']
-  live_stream true
-  notifies :run, 'ruby_block[sleep two]', :immediately
-end
-
-ruby_block 'sleep two' do
-  block { sleep 2 }
   action :nothing
+  subscribes :run, 'system_preference[disable computer sleep]'
+  subscribes :run, 'system_preference[disable display sleep]'
+  subscribes :run, 'system_preference[disable hard disk sleep]'
 end
