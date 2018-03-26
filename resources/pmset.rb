@@ -1,15 +1,21 @@
 resource_name :pmset
-default_action :run
-
-BASE_COMMAND = '/usr/bin/pmset'.freeze
 
 property :settings, Hash
 
 action :run do
   new_resource.settings.each do |setting, value|
-    execute BASE_COMMAND do
-      command "#{BASE_COMMAND} #{setting} #{value}"
-    end
+    execute [pmset_command, setting, value]
+  end
+end
+
+action_class do
+  def pmset_command
+    '/usr/bin/pmset'
+  end
+
+  def power_management
+    conversion_command = shell_out('/usr/bin/plutil', '-convert', 'xml1', '/Library/Preferences/com.apple.PowerManagement.plist', '-o', '-')
+    Plist.parse_xml conversion_command.stdout
   end
 end
 
