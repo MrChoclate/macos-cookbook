@@ -9,7 +9,7 @@ module MacOS
     def automatic_checked_disabled?
       automatic_check_is_off_pattern = Regexp.union 'Automatic check is off'
       command = shell_out softwareupdate_command, '--schedule'
-      command.stderr.chomp.match? automatic_check_is_off_pattern
+      command.stdout.chomp.match? automatic_check_is_off_pattern
     end
 
     def softwareupdate_command
