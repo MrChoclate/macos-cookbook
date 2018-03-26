@@ -36,6 +36,7 @@ suites:
       enforce_idempotency: false
     run_list:
       - recipe[macos::disable_screensaver]
+      - recipe[macos::keep_awake]
       - recipe[macos::caffeinate]
     verifier:
       inspec_tests:
