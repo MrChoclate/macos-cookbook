@@ -3,7 +3,7 @@ power_sentinel = ::File.join Chef::Config[:file_cache_path], '.pmset.restoredefa
 execute 'restore default power settings' do
   command ['/usr/bin/pmset', 'restoredefaults']
   notifies :create, 'file[power sentinel file]'
-  not_if { ::File.exist power_sentinel }
+  not_if { ::File.exist? power_sentinel }
 end
 
 ruby_block 'sleep after restore' do
@@ -12,6 +12,6 @@ ruby_block 'sleep after restore' do
 end
 
 file 'power sentinel file' do
-  path sentinel_path
+  path power_sentinel
   notifies :run, 'ruby_block[sleep after restore]', :immediately
 end
