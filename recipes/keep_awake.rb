@@ -66,10 +66,11 @@ system_preference 'enable remote login' do
   end
 end
 
-execute 'restore default power settings' do
+execute 'read power settings from disk' do
   command ['/usr/bin/pmset', 'touch']
-  action :nothing
+  notifies :run, 'ruby_block[sleep after restore]', :immediately
   subscribes :run, 'system_preference[disable computer sleep]'
   subscribes :run, 'system_preference[disable display sleep]'
   subscribes :run, 'system_preference[disable hard disk sleep]'
+  action :nothing
 end

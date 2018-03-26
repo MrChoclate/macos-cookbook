@@ -7,7 +7,7 @@ execute 'restore default power settings' do
 end
 
 ruby_block 'sleep after restore' do
-  block { sleep 1 }
+  block { sleep 2 }
   action :nothing
 end
 
