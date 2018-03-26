@@ -35,6 +35,7 @@ suites:
       multiple_converge: 2
       enforce_idempotency: false
     run_list:
+      - recipe[macos::disable_screensaver]
       - recipe[macos::caffeinate]
     verifier:
       inspec_tests:
