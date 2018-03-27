@@ -68,9 +68,8 @@ end
 
 execute 'read power settings from disk' do
   command ['/usr/bin/pmset', 'touch']
-  notifies :run, 'ruby_block[sleep after restore]', :immediately
-  subscribes :run, 'system_preference[disable computer sleep]'
-  subscribes :run, 'system_preference[disable display sleep]'
-  subscribes :run, 'system_preference[disable hard disk sleep]'
+  subscribes :run, 'system_preference[disable computer sleep]', :immediately
+  subscribes :run, 'system_preference[disable display sleep]', :immediately
+  subscribes :run, 'system_preference[disable hard disk sleep]', :immediately
   action :nothing
 end
