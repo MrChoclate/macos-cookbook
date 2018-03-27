@@ -31,14 +31,14 @@ suites:
     - updates-disabled
 
 - name: power-management
-    provisioner:
-      multiple_converge: 2
-      enforce_idempotency: false
-    run_list:
-      - recipe[macos::restore_default_power_settings]
-      - recipe[macos::keep_awake]
-      - recipe[macos::caffeinate]
-      - recipe[macos::disable_screensaver]
+  provisioner:
+    multiple_converge: 2
+    enforce_idempotency: false
+  run_list:
+    - recipe[macos::restore_default_power_settings]
+    - recipe[macos::keep_awake]
+    - recipe[macos::caffeinate]
+    - recipe[macos::disable_screensaver]
   verifier:
     controls:
     - screensaver-disabled
