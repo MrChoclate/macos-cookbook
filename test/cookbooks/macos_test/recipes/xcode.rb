@@ -7,6 +7,7 @@ if node['platform_version'].match? Regexp.union '10.13'
 
 elsif node['platform_version'].match? Regexp.union '10.12'
   xcode '9.2' do
+    path '/Applications/Xcode_9.2.app'
     ios_simulators %w(11 10)
   end
 
