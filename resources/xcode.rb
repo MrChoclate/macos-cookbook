@@ -1,8 +1,8 @@
 resource_name :xcode
-default_action %i(setup install_xcode install_simulators)
+default_action %i(setup install_xcode set_path install_simulators)
 
 property :version, String, name_property: true
-property :path, String, default: '/Applications/Xcode.app'
+property :path, String
 property :ios_simulators, Array
 
 action :setup do
@@ -32,8 +32,32 @@ action :install_xcode do
   execute "install Xcode #{xcode.version}" do
     command XCVersion.install_xcode(xcode)
     environment xcode.credentials
-    not_if { xcode.installed? }
+    not_if { xcode.installed_path.any? }
     timeout 7200
+  end
+end
+
+action :set_path do
+  xcode = Xcode.new(new_resource.version,
+    -> { data_bag_item(:credentials, :apple_id) },
+    node['macos']['apple_id'])
+
+  if new_resource.path
+    link 'delete symlink created by xcversion gem' do
+      target_file '/Applications/Xcode.app'
+      action :delete
+    end
+
+    execute "rename #{xcode.installed_path} to #{new_resource.path}" do
+      command ['mv', xcode.installed_path, new_resource.path]
+      only_if { ::File.exist?(xcode.installed_path) }
+      notifies :run, "execute[switch active Xcode to #{new_resource.path}]", :immediately
+    end
+
+    execute "switch active Xcode to #{new_resource.path}" do
+      command ['xcode-select', '--switch', new_resource.path]
+      action :nothing
+    end
   end
 end
 
