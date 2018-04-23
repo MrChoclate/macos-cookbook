@@ -1,63 +1,33 @@
 resource_name :xcode
-default_action %i(setup install_xcode set_path install_simulators)
+default_action %i(install_xcode set_path install_simulators)
 
 property :version, String, name_property: true
-property :path, String
+property :path, String, default: '/Applications/Xcode.app'
 property :ios_simulators, Array
 
-action :setup do
-  execute 'install Command Line Tools' do
-    command lazy { ['softwareupdate', '--install', CommandLineTools.new.product] }
-    notifies :create, 'file[sentinel to request on-demand install]', :before
-    not_if { ::File.exist?('/Library/Developer/CommandLineTools/usr/lib/libxcrun.dylib') }
-    live_stream true
-  end
-
-  file 'sentinel to request on-demand install' do
-    path '/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress'
-    subscribes :delete, 'execute[install Command Line Tools]', :immediately
-    action :nothing
-  end
-
-  chef_gem 'xcode-install' do
-    options('--no-document --no-user-install')
-  end
-end
-
 action :install_xcode do
-  xcode = Xcode.new(new_resource.version,
-    -> { data_bag_item(:credentials, :apple_id) },
-    node['macos']['apple_id'])
+  xcode = XcodeInstall::Installer.new
 
-  execute "install Xcode #{xcode.version}" do
-    command XCVersion.install_xcode(xcode)
-    environment xcode.credentials
-    not_if { xcode.installed_path.any? }
-    timeout 7200
+  ruby_block "download and install Xcode #{new_resource.version}" do
+    block do
+      ENV['XCODE_INSTALL_USER'] = node['macos']['apple_id']['user']
+      ENV['XCODE_INSTALL_PASSWORD'] = node['macos']['apple_id']['password']
+      xcode.install_version(new_resource.version, false)
+    end
+    not_if { xcode.installed?(new_resource.version) }
   end
 end
 
 action :set_path do
-  xcode = Xcode.new(new_resource.version,
-    -> { data_bag_item(:credentials, :apple_id) },
-    node['macos']['apple_id'])
+  execute "move Xcode to #{new_resource.path}" do
+    command ['mv', "/Applications/Xcode-#{new_resource.version}.app", new_resource.path]
+    only_if { ::File.exist?("/Applications/Xcode-#{new_resource.version}.app") }
+    notifies :run, "execute[switch active Xcode to #{new_resource.path}]", :immediately
+  end
 
-  if new_resource.path
-    link 'delete symlink created by xcversion gem' do
-      target_file '/Applications/Xcode.app'
-      action :delete
-    end
-
-    execute "rename #{xcode.installed_path} to #{new_resource.path}" do
-      command ['mv', xcode.installed_path, new_resource.path]
-      only_if { ::File.exist?(xcode.installed_path) }
-      notifies :run, "execute[switch active Xcode to #{new_resource.path}]", :immediately
-    end
-
-    execute "switch active Xcode to #{new_resource.path}" do
-      command ['xcode-select', '--switch', new_resource.path]
-      action :nothing
-    end
+  execute "switch active Xcode to #{new_resource.path}" do
+    command ['xcode-select', '--switch', new_resource.path]
+    action :nothing
   end
 end
 
