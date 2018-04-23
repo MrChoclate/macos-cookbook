@@ -3,14 +3,8 @@ include Chef::Mixin::ShellOut
 module MacOS
   class Xcode
     attr_reader :version
-    attr_reader :credentials
 
-    def initialize(semantic_version, data_bag_retrieval = nil, node_credential_attributes = nil)
-      developer_id = find_apple_id(data_bag_retrieval, node_credential_attributes)
-      @credentials = { XCODE_INSTALL_USER:     developer_id['apple_id'],
-                       XCODE_INSTALL_PASSWORD: developer_id['password'] }
-      authenticate_with_apple(@credentials)
-
+    def initialize(semantic_version)
       @semantic_version = semantic_version
       apple_version = Xcode::Version.new(@semantic_version).apple_version
       @version = available_versions_list[xcode_index(apple_version)].strip
@@ -26,31 +20,6 @@ module MacOS
 
     def available_xcodes
       available_versions_list.map { |v| Xcode::Version.new v.split.first }
-    end
-
-    def installed_list
-      shell_out(XCVersion.installed_xcodes).stdout.lines
-    end
-
-    def installed_path
-      path = installed_list.select { |p| p.split.first == @semantic_version }
-      return path if path.empty?
-      path[0].split.last.delete('()')
-    end
-
-    def authenticate_with_apple(credentials)
-      shell_out!(XCVersion.update, env: credentials)
-    end
-
-    def find_apple_id(data_bag_retrieval, node_credential_attributes)
-      if node_credential_attributes
-        { 'apple_id' => node_credential_attributes['user'],
-          'password' => node_credential_attributes['password'] }
-      else
-        data_bag_retrieval.call
-      end
-    rescue Net::HTTPServerException
-      Chef::Application.fatal!('No developer credentials supplied!')
     end
 
     class Simulator
