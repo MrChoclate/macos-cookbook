@@ -1,0 +1,29 @@
+current directory: /Users/jacob/macos-cookbook/files/default/vendor/gems/unf_ext-0.0.7.5/ext/unf_ext
+/System/Library/Frameworks/Ruby.framework/Versions/2.3/usr/bin/ruby -r ./siteconf20180423-80272-1oa5q2l.rb extconf.rb
+Ignoring binding_of_caller-0.8.0 because its extensions are not built.  Try: gem pristine binding_of_caller --version 0.8.0
+Ignoring byebug-10.0.1 because its extensions are not built.  Try: gem pristine byebug --version 10.0.1
+Ignoring debug_inspector-0.0.3 because its extensions are not built.  Try: gem pristine debug_inspector --version 0.0.3
+Ignoring dep-selector-libgecode-1.3.1 because its extensions are not built.  Try: gem pristine dep-selector-libgecode --version 1.3.1
+Ignoring dep_selector-1.0.6 because its extensions are not built.  Try: gem pristine dep_selector --version 1.0.6
+checking for main() in -lstdc++... yes
+creating Makefile
+
+To see why this extension failed to compile, please check the mkmf.log which can be found here:
+
+  /Users/jacob/macos-cookbook/files/default/vendor/extensions/universal-darwin-17/2.3.0/unf_ext-0.0.7.5/mkmf.log
+
+current directory: /Users/jacob/macos-cookbook/files/default/vendor/gems/unf_ext-0.0.7.5/ext/unf_ext
+make "DESTDIR=" clean
+
+current directory: /Users/jacob/macos-cookbook/files/default/vendor/gems/unf_ext-0.0.7.5/ext/unf_ext
+make "DESTDIR="
+compiling unf.cc
+linking shared-object unf_ext.bundle
+ld: warning: directory not found for option '-L/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.Internal.sdk/usr/local/libressl/lib'
+ld: warning: directory not found for option '-L/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.Internal.sdk/usr/local/lib'
+ld: warning: directory not found for option '-L/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.Internal.sdk/usr/local/libressl/lib'
+ld: warning: directory not found for option '-L/BuildRoot/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.Internal.sdk/usr/local/lib'
+
+current directory: /Users/jacob/macos-cookbook/files/default/vendor/gems/unf_ext-0.0.7.5/ext/unf_ext
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 unf_ext.bundle ./.gem.20180423-80272-1h94a97
