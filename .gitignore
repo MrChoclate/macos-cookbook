@@ -62,7 +62,6 @@ spec/data/nodes
 # acceptance binstubs
 acceptance/bin/*
 
-vendor/
 acceptance/vendor
 kitchen-tests/vendor
 
